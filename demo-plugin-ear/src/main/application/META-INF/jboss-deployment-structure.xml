@@ -6,15 +6,24 @@
 
 <jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.1">
     <ear-subdeployments-isolated>false</ear-subdeployments-isolated>
+
+    <deployment>
+        <exclusions>
+            <module name="org.apache.commons.codec"/>
+        </exclusions>
+    </deployment>
+
     <sub-deployment name="demo-plugin-1.0.0p1m1.jar">
         <dependencies>
             <module name="deployment.databroker.ear.data-common.jar"/>
             <module name="deployment.databroker.ear.control-core.jar"/>
         </dependencies>
     </sub-deployment>
+
     <sub-deployment name="spreadsheet2jdbc-1.0.0p1m1.jar">
         <dependencies>
             <module name="org.postgresql" slot="main"/>
+            <module name="deployment.demo-plugin-ear-1.0.0p1m1.ear.commons-codec-1.9.jar"/>
             <module name="deployment.databroker.ear.data-common.jar"/>
             <module name="deployment.databroker.ear.data-common-jee.jar"/>
         </dependencies>

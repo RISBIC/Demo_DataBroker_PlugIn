@@ -48,7 +48,7 @@
     </properties>
 
     <modules>
-        <module>spreadsheet2jdbc</module> 
+        <module>spreadsheet2jdbc</module>
         <module>demo-plugin</module>
         <module>demo-plugin-ear</module>
     </modules>
@@ -118,7 +118,7 @@
             <plugin>
                 <groupId>org.jboss.as.plugins</groupId>
                 <artifactId>jboss-as-maven-plugin</artifactId>
-                <version>7.5.Final</version>
+                <version>7.6.Final</version>
             </plugin>
 
             <plugin>
