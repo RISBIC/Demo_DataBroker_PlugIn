@@ -21,7 +21,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Resource;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
 import org.apache.poi.xssf.model.SharedStringsTable;
@@ -36,7 +35,6 @@ import com.arjuna.databroker.data.DataConsumer;
 import com.arjuna.databroker.data.DataFlow;
 import com.arjuna.databroker.data.DataProcessor;
 import com.arjuna.databroker.data.DataProvider;
-import com.arjuna.databroker.data.DataSource;
 import com.arjuna.databroker.data.jee.annotation.DataConsumerInjection;
 import com.arjuna.databroker.data.jee.annotation.DataProviderInjection;
 import com.arjuna.databroker.data.jee.annotation.PostConfig;
@@ -174,9 +172,9 @@ public class Spreadsheet2JDBCProcessor implements DataProcessor
         public SheetHandler(SharedStringsTable sharedStringsTable)
         {
             _sharedStringsTable = sharedStringsTable;
-            _cellName              = null;
-            _value                  = new StringBuffer();
-            _rowMap                 = new LinkedHashMap<String, String>();
+            _cellName           = null;
+            _value              = new StringBuffer();
+            _rowMap             = new LinkedHashMap<String, String>();
         }
 
         @Override
@@ -266,14 +264,14 @@ public class Spreadsheet2JDBCProcessor implements DataProcessor
         try
         {
             createTable();
-	
+
             Map<String, String> refIdMap = new HashMap<String, String>();
 
             OPCPackage         opcPackage         = OPCPackage.open(data);
             XSSFReader         xssfReader         = new XSSFReader(opcPackage);
             SharedStringsTable sharedStringsTable = xssfReader.getSharedStringsTable();
 
-            XMLReader        workbookParser  = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
+            XMLReader      workbookParser  = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
             ContentHandler workbookHandler = new WorkbookHandler(refIdMap);
             workbookParser.setContentHandler(workbookHandler);
 
@@ -282,7 +280,7 @@ public class Spreadsheet2JDBCProcessor implements DataProcessor
             workbookParser.parse(workbookSource);
             workbookInputStream.close();
 
-            XMLReader        sheetParser  = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
+            XMLReader      sheetParser  = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
             ContentHandler sheetHandler = new SheetHandler(sharedStringsTable);
             sheetParser.setContentHandler(sheetHandler);
 
@@ -303,15 +301,15 @@ public class Spreadsheet2JDBCProcessor implements DataProcessor
 
     private String createTable()
     {
-    	String tableName = "table_" + UUID.randomUUID().toString().replace('-', '_');
+        String tableName = "table_" + UUID.randomUUID().toString().replace('-', '_');
 
-    	try
-     	{
+        try
+        {
             StringBuffer createCommentBuffer = new StringBuffer();
 
-            createCommentBuffer.append("CREATE TABLE \'");
+            createCommentBuffer.append("CREATE TABLE ");
             createCommentBuffer.append(tableName);
-            createCommentBuffer.append("\'\n(\n");
+            createCommentBuffer.append("\n (\n");
             createCommentBuffer.append("     companyname TEXT,\n");
             createCommentBuffer.append("     companynumber TEXT,\n");
             createCommentBuffer.append("     regaddresscareof TEXT,\n");
@@ -379,12 +377,12 @@ public class Spreadsheet2JDBCProcessor implements DataProcessor
             statement.close();
 
             return tableName;
-     	}
-     	catch (Throwable throwable)
-     	{
-            logger.log(Level.WARNING, "Problem creating table: \'" + tableName + "\'");
-     	    return null;
-     	}
+        }
+        catch (Throwable throwable)
+        {
+            logger.log(Level.WARNING, "Problem creating table: \'" + tableName + "\'", throwable);
+            return null;
+        }
     }
 
     @Override
@@ -401,7 +399,7 @@ public class Spreadsheet2JDBCProcessor implements DataProcessor
     @SuppressWarnings("unchecked")
     public <T> DataConsumer<T> getDataConsumer(Class<T> dataClass)
     {
-        if (dataClass == File.class)
+        if (File.class.isAssignableFrom(dataClass))
             return (DataConsumer<T>) _dataConsumer;
         else
             return null;
@@ -421,7 +419,7 @@ public class Spreadsheet2JDBCProcessor implements DataProcessor
     @SuppressWarnings("unchecked")
     public <T> DataProvider<T> getDataProvider(Class<T> dataClass)
     {
-    	if (dataClass == String.class)
+        if (String.class.isAssignableFrom(dataClass))
             return (DataProvider<T>) _dataProvider;
         else
             return null;
