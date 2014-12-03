@@ -17,7 +17,7 @@ import org.risbic.dbplugins.demo.spreadsheet2jdbc.Spreadsheet2JDBCProcessorFacto
 
 @Startup
 @Singleton
-public class ApachePOIDataFlowNodeFactoriesSetup
+public class DemoDataFlowNodeFactoriesSetup
 {
     @PostConstruct
     public void setup()
