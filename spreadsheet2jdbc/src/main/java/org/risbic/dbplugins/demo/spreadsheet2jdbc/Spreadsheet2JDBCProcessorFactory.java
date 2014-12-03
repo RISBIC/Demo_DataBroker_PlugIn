@@ -88,7 +88,7 @@ public class Spreadsheet2JDBCProcessorFactory implements DataFlowNodeFactory
     {
         if (dataFlowNodeClass.equals(DataProcessor.class))
         {
-            if (! metaProperties.isEmpty())
+            if (metaProperties.isEmpty())
                 return (T) new Spreadsheet2JDBCProcessor(name, properties);
             else
                 throw new InvalidMetaPropertyException("No metaproperties expected", null, null);
