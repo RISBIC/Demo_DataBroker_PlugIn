@@ -4,6 +4,7 @@
 
 package org.risbic.dbplugins.demo.spreadsheet2jdbc;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -52,11 +53,7 @@ public class Spreadsheet2JDBCProcessorFactory implements DataFlowNodeFactory
         throws InvalidClassException
     {
         if (dataFlowNodeClass.equals(DataProcessor.class))
-        {
-            List<String> metaPropertyNames = new LinkedList<String>();
-
-            return metaPropertyNames;
-        }
+            return Collections.emptyList();
         else
             throw new InvalidClassException("Unsupported class", dataFlowNodeClass.getName());
     }
@@ -67,7 +64,7 @@ public class Spreadsheet2JDBCProcessorFactory implements DataFlowNodeFactory
     {
         if (dataFlowNodeClass.equals(DataProcessor.class))
         {
-            if (! metaProperties.isEmpty())
+            if (metaProperties.isEmpty())
             {
                 List<String> propertyNames = new LinkedList<String>();
 

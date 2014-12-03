@@ -7,12 +7,6 @@
 <jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.1">
     <ear-subdeployments-isolated>false</ear-subdeployments-isolated>
 
-    <deployment>
-        <exclusions>
-            <module name="org.apache.commons.codec"/>
-        </exclusions>
-    </deployment>
-
     <sub-deployment name="demo-plugin-1.0.0p1m1.jar">
         <dependencies>
             <module name="deployment.databroker.ear.data-common.jar"/>
