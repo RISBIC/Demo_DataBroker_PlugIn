@@ -3,6 +3,8 @@ Demo_DataBroker_PlugIn
 
 Demo DataBroker PlugIn
 
+- Requires adding of "commons-codec-1.9.jar" adding to "standalone/lib".
+
 License
 =======
 

@@ -22,7 +22,7 @@
     <name>Demo DataBroker PlugIn EAR</name>
 
     <dependencies>
-        <dependency>
+        <!-- dependency>
             <groupId>stax</groupId>
             <artifactId>stax-api</artifactId>
             <version>1.0.1</version>
@@ -39,7 +39,7 @@
             <artifactId>dom4j</artifactId>
             <version>1.6.1</version>
             <type>jar</type>
-        </dependency>
+        </dependency -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
@@ -63,6 +63,7 @@
             <artifactId>commons-codec</artifactId>
             <version>1.9</version>
             <type>jar</type>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.risbic.dbplugins.demo</groupId>
@@ -88,21 +89,6 @@
                     <includeLibInApplicationXml>true</includeLibInApplicationXml>
                     <modules>
                         <jarModule>
-                            <groupId>stax</groupId>
-                            <artifactId>stax-api</artifactId>
-                            <includeInApplicationXml>true</includeInApplicationXml>
-                        </jarModule>
-                        <jarModule>
-                            <groupId>org.apache.xmlbeans</groupId>
-                            <artifactId>xmlbeans</artifactId>
-                            <includeInApplicationXml>true</includeInApplicationXml>
-                        </jarModule>
-                        <jarModule>
-                            <groupId>dom4j</groupId>
-                            <artifactId>dom4j</artifactId>
-                            <includeInApplicationXml>true</includeInApplicationXml>
-                        </jarModule>
-                        <jarModule>
                             <groupId>org.apache.poi</groupId>
                             <artifactId>poi</artifactId>
                             <includeInApplicationXml>true</includeInApplicationXml>
@@ -113,14 +99,9 @@
                             <includeInApplicationXml>true</includeInApplicationXml>
                         </jarModule>
                         <jarModule>
-                            <groupId>org.apache.poi</groupId>
-                            <artifactId>poi-ooxml-schemas</artifactId>
-                            <includeInApplicationXml>true</includeInApplicationXml>
-                        </jarModule>
-                        <jarModule>
                             <groupId>commons-codec</groupId>
                             <artifactId>commons-codec</artifactId>
-                            <includeInApplicationXml>true</includeInApplicationXml>
+                            <excluded>true</excluded>
                         </jarModule>
                         <ejbModule>
                             <groupId>org.risbic.dbplugins.demo</groupId>
