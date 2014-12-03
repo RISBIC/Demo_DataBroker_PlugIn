@@ -21,9 +21,13 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.text.TabExpander;
+
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
 import org.apache.poi.xssf.model.SharedStringsTable;
+import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -31,6 +35,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
+
 import com.arjuna.databroker.data.DataConsumer;
 import com.arjuna.databroker.data.DataFlow;
 import com.arjuna.databroker.data.DataProcessor;
@@ -56,7 +61,7 @@ public class Spreadsheet2JDBCProcessor implements DataProcessor
 
         _name       = name;
         _properties = properties;
-        
+
         _connection = null;
     }
 
@@ -160,6 +165,11 @@ public class Spreadsheet2JDBCProcessor implements DataProcessor
         private Map<String, String> _refIdMap;
     }
 
+    private static final String[] KEYS = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+    	                                   "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+                                           "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM",
+                                           "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU" };
+
     private class SheetHandler extends DefaultHandler
     {
         private static final String SPREADSHEETML_NAMESPACE = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
@@ -167,14 +177,21 @@ public class Spreadsheet2JDBCProcessor implements DataProcessor
         private static final String ROW_TAGNAME             = "row";
         private static final String CELL_TAGNAME            = "c";
         private static final String VALUE_TAGNAME           = "v";
+        private static final String SHEETDATA_TAGNAME       = "sheetData";
         private static final String REF_ATTRNAME            = "r";
+        private static final String TYPE_ATTRNAME           = "t";
+        private static final String STYLE_ATTRNAME          = "s";
 
-        public SheetHandler(SharedStringsTable sharedStringsTable)
+        public SheetHandler(String tableName, SharedStringsTable sharedStringsTable)
         {
+        	_tableName          = tableName;
             _sharedStringsTable = sharedStringsTable;
             _cellName           = null;
+            _cellType           = null;
+            _cellStyle          = null;
             _value              = new StringBuffer();
             _rowMap             = new LinkedHashMap<String, String>();
+            _rowCount           = 0;
         }
 
         @Override
@@ -182,7 +199,11 @@ public class Spreadsheet2JDBCProcessor implements DataProcessor
             throws SAXException
         {
             if ((localName != null) && localName.equals(CELL_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
-                _cellName = attributes.getValue(NONE_NAMESPACE, REF_ATTRNAME);
+            {
+                _cellName  = attributes.getValue(NONE_NAMESPACE, REF_ATTRNAME);
+                _cellType  = attributes.getValue(NONE_NAMESPACE, TYPE_ATTRNAME);
+                _cellStyle = attributes.getValue(NONE_NAMESPACE, STYLE_ATTRNAME);
+            }
             else if ((localName != null) && localName.equals(VALUE_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
                 _value.setLength(0);
         }
@@ -193,17 +214,51 @@ public class Spreadsheet2JDBCProcessor implements DataProcessor
         {
             if ((localName != null) && localName.equals(VALUE_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
             {
-                _rowMap.put(_cellName, _value.toString());
-                _value.setLength(0);
+            	if (_cellType.equals("n"))
+                    _rowMap.put(removeRowNumber(_cellName), _value.toString());
+            	else if (_cellType.equals("s"))
+            	{
+                    String sharedStringsTableIndex = _value.toString();
+                    try
+                    {
+                        int idx = Integer.parseInt(sharedStringsTableIndex);
+                        XSSFRichTextString rtss = new XSSFRichTextString(_sharedStringsTable.getEntryAt(idx));
+                        _rowMap.put(removeRowNumber(_cellName), rtss.toString());
+                    }
+                    catch (NumberFormatException numberFormatException)
+                    {
+                        logger.log(Level.WARNING, "Failed to parse 'Shared Strings Table' index '" + sharedStringsTableIndex + "'", numberFormatException);
+                    }
+                }
+            	else
+            		logger.log(Level.WARNING, "Unsupported cell type '" + _cellType + "'");
+
+            	_value.setLength(0);
             }
             else if ((localName != null) && localName.equals(ROW_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
             {
-                String rowJSON = rowMap2JSON(_rowMap);
-                if (logger.isLoggable(Level.FINER))
-                    logger.log(Level.FINER, "Row: [" + rowJSON + "]");
-                _dataProvider.produce(rowJSON);
+                String sql = rowMap2SQL(_rowMap);
+                if (logger.isLoggable(Level.FINE))
+                    logger.log(Level.FINE, "SQL: [" + sql + "]");
+
+                Statement statement = null;
+                try
+                {
+                    statement = _connection.createStatement();
+                    statement.executeUpdate(sql);
+                    statement.close();
+
+                    _rowCount++;
+                }
+                catch (Throwable throwable)
+                {
+                	logger.log(Level.WARNING, "Problem adding data: \'" + sql + "\'", throwable);
+                }
+
                 _rowMap.clear();
             }
+            else if ((localName != null) && localName.equals(SHEETDATA_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
+                _dataProvider.produce(_tableName);
         }
 
         @Override
@@ -213,30 +268,33 @@ public class Spreadsheet2JDBCProcessor implements DataProcessor
             _value.append(characters, start, length);
         }
 
-        private String rowMap2JSON(Map<String, String> rowMap)
+        private String rowMap2SQL(Map<String, String> rowMap)
         {
-            StringBuffer json = new StringBuffer();
+            StringBuffer sql = new StringBuffer();
 
-            json.append("{");
+            sql.append("INSERT INTO ");
+            sql.append(_tableName);
+            sql.append(" VALUES (");
             boolean first = true;
-            for (Entry<String, String> row: rowMap.entrySet())
+            for (String key: KEYS)
             {
                 if (! first)
-                    json.append(",");
+                    sql.append(',');
                 else
                     first = false;
 
-                json.append("\"");
-                json.append(string2JSON(removeRowNumber(row.getKey())));
-                json.append("\"");
-                json.append(":");
-                json.append("\"");
-                json.append(string2JSON(row.getValue()));
-                json.append("\"");
-            }
-            json.append("}");
+                String value = rowMap.get(key);
 
-            return json.toString();
+                sql.append('\'');
+                if (value != null)
+                    sql.append(sqlEscape(value));
+                sql.append('\'');
+            }
+            sql.append(",");
+            sql.append(Long.toString(_rowCount));
+            sql.append(");");
+
+            return sql.toString();
         }
 
         private String removeRowNumber(String cellName)
@@ -248,22 +306,27 @@ public class Spreadsheet2JDBCProcessor implements DataProcessor
             return cellName.substring(0, index);
         }
 
-        private String string2JSON(String value)
+        private String sqlEscape(String sql)
         {
-            return value.replaceAll("\\\\", "\\\\\\\\").replaceAll("\"", "\\\\\"");
+//            return sql.replaceAll("\\\\", "\\\\\\\\").replaceAll("'", "\\\\'");
+            return sql.replaceAll("\\\\", "\\\\\\\\").replaceAll("'", "");
         }
 
+        private String              _tableName;
         private SharedStringsTable  _sharedStringsTable;
         private String              _cellName;
+        private String              _cellType;
+        private String              _cellStyle;
         private StringBuffer        _value;
         private Map<String, String> _rowMap;
+        private long                _rowCount;
     }
 
     public void consume(File data)
     {
         try
         {
-            createTable();
+            String tableName = createTable();
 
             Map<String, String> refIdMap = new HashMap<String, String>();
 
@@ -281,7 +344,7 @@ public class Spreadsheet2JDBCProcessor implements DataProcessor
             workbookInputStream.close();
 
             XMLReader      sheetParser  = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
-            ContentHandler sheetHandler = new SheetHandler(sharedStringsTable);
+            ContentHandler sheetHandler = new SheetHandler(tableName, sharedStringsTable);
             sheetParser.setContentHandler(sheetHandler);
 
             Iterator<InputStream> sheetInputStreamIterator = xssfReader.getSheetsData();
