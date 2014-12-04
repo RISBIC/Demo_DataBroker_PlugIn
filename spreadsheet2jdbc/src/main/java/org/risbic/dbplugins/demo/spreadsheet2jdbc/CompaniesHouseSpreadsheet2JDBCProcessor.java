@@ -52,7 +52,7 @@ public class CompaniesHouseSpreadsheet2JDBCProcessor implements DataProcessor
 
     public CompaniesHouseSpreadsheet2JDBCProcessor(String name, Map<String, String> properties)
     {
-        logger.log(Level.FINE, "XSSFDataProcessor: " + name + ", " + properties);
+        logger.log(Level.FINE, "CompaniesHouseSpreadsheet2JDBCProcessor: " + name + ", " + properties);
 
         _name       = name;
         _properties = properties;
@@ -161,7 +161,7 @@ public class CompaniesHouseSpreadsheet2JDBCProcessor implements DataProcessor
     }
 
     private static final String[] KEYS = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
-    	                                   "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+                                           "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
                                            "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM",
                                            "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU" };
 
@@ -179,7 +179,7 @@ public class CompaniesHouseSpreadsheet2JDBCProcessor implements DataProcessor
 
         public SheetHandler(String tableName, SharedStringsTable sharedStringsTable)
         {
-        	_tableName          = tableName;
+            _tableName          = tableName;
             _sharedStringsTable = sharedStringsTable;
             _cellName           = null;
             _cellType           = null;
@@ -209,10 +209,10 @@ public class CompaniesHouseSpreadsheet2JDBCProcessor implements DataProcessor
         {
             if ((localName != null) && localName.equals(VALUE_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
             {
-            	if (_cellType.equals("n"))
+                if (_cellType.equals("n"))
                     _rowMap.put(removeRowNumber(_cellName), _value.toString());
-            	else if (_cellType.equals("s"))
-            	{
+                else if (_cellType.equals("s"))
+                {
                     String sharedStringsTableIndex = _value.toString();
                     try
                     {
@@ -225,10 +225,10 @@ public class CompaniesHouseSpreadsheet2JDBCProcessor implements DataProcessor
                         logger.log(Level.WARNING, "Failed to parse 'Shared Strings Table' index '" + sharedStringsTableIndex + "'", numberFormatException);
                     }
                 }
-            	else
-            		logger.log(Level.WARNING, "Unsupported cell type '" + _cellType + "'");
+                else
+                    logger.log(Level.WARNING, "Unsupported cell type '" + _cellType + "'");
 
-            	_value.setLength(0);
+                _value.setLength(0);
             }
             else if ((localName != null) && localName.equals(ROW_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
             {
@@ -247,7 +247,7 @@ public class CompaniesHouseSpreadsheet2JDBCProcessor implements DataProcessor
                 }
                 catch (Throwable throwable)
                 {
-                	logger.log(Level.WARNING, "Problem adding data: \'" + sql + "\'", throwable);
+                    logger.log(Level.WARNING, "Problem adding data: \'" + sql + "\'", throwable);
                 }
 
                 _rowMap.clear();
@@ -285,7 +285,7 @@ public class CompaniesHouseSpreadsheet2JDBCProcessor implements DataProcessor
                     sql.append(sqlEscape(value));
                 sql.append('\'');
             }
-            sql.append(",");
+            sql.append(",'',");
             sql.append(Long.toString(_rowCount));
             sql.append(");");
 
@@ -359,7 +359,7 @@ public class CompaniesHouseSpreadsheet2JDBCProcessor implements DataProcessor
 
     private String createTable()
     {
-        String tableName = "table_" + UUID.randomUUID().toString().replace('-', '_');
+        String tableName = "companieshouse_" + UUID.randomUUID().toString().replace('-', '_');
 
         try
         {

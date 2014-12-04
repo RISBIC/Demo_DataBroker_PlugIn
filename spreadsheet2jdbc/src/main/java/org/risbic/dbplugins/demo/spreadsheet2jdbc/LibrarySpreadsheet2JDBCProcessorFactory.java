@@ -89,7 +89,7 @@ public class LibrarySpreadsheet2JDBCProcessorFactory implements DataFlowNodeFact
         if (dataFlowNodeClass.equals(DataProcessor.class))
         {
             if (metaProperties.isEmpty())
-                return (T) new CompaniesHouseSpreadsheet2JDBCProcessor(name, properties);
+                return (T) new LibrarySpreadsheet2JDBCProcessor(name, properties);
             else
                 throw new InvalidMetaPropertyException("No metaproperties expected", null, null);
         }
