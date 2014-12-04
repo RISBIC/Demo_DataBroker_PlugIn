@@ -18,9 +18,9 @@ import com.arjuna.databroker.data.InvalidPropertyException;
 import com.arjuna.databroker.data.MissingMetaPropertyException;
 import com.arjuna.databroker.data.MissingPropertyException;
 
-public class Spreadsheet2JDBCProcessorFactory implements DataFlowNodeFactory
+public class LibrarySpreadsheet2JDBCProcessorFactory implements DataFlowNodeFactory
 {
-    public Spreadsheet2JDBCProcessorFactory(String name, Map<String, String> properties)
+    public LibrarySpreadsheet2JDBCProcessorFactory(String name, Map<String, String> properties)
     {
         _name       = name;
         _properties = properties;
@@ -68,9 +68,9 @@ public class Spreadsheet2JDBCProcessorFactory implements DataFlowNodeFactory
             {
                 List<String> propertyNames = new LinkedList<String>();
 
-                propertyNames.add(Spreadsheet2JDBCProcessor.DATABASE_CONNECTIONURL_PROPNAME);
-                propertyNames.add(Spreadsheet2JDBCProcessor.DATABASE_USERNAME_PROPNAME);
-                propertyNames.add(Spreadsheet2JDBCProcessor.DATABASE_PASSWORD_PROPNAME);
+                propertyNames.add(CompaniesHouseSpreadsheet2JDBCProcessor.DATABASE_CONNECTIONURL_PROPNAME);
+                propertyNames.add(CompaniesHouseSpreadsheet2JDBCProcessor.DATABASE_USERNAME_PROPNAME);
+                propertyNames.add(CompaniesHouseSpreadsheet2JDBCProcessor.DATABASE_PASSWORD_PROPNAME);
 
                 return propertyNames;
             }
@@ -89,7 +89,7 @@ public class Spreadsheet2JDBCProcessorFactory implements DataFlowNodeFactory
         if (dataFlowNodeClass.equals(DataProcessor.class))
         {
             if (metaProperties.isEmpty())
-                return (T) new Spreadsheet2JDBCProcessor(name, properties);
+                return (T) new CompaniesHouseSpreadsheet2JDBCProcessor(name, properties);
             else
                 throw new InvalidMetaPropertyException("No metaproperties expected", null, null);
         }

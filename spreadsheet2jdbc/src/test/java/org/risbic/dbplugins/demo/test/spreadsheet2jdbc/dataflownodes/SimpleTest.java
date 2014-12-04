@@ -8,7 +8,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
-import org.risbic.dbplugins.demo.spreadsheet2jdbc.Spreadsheet2JDBCProcessor;
+import org.risbic.dbplugins.demo.spreadsheet2jdbc.CompaniesHouseSpreadsheet2JDBCProcessor;
 import static org.junit.Assert.*;
 import com.arjuna.databroker.data.connector.ObserverDataConsumer;
 import com.arjuna.databroker.data.jee.DataFlowNodeLifeCycleControl;
@@ -20,10 +20,10 @@ public class SimpleTest
     {
         String              name       = "XSSF Data Processor";
         Map<String, String> properties = new HashMap<String, String>();
-        properties.put(Spreadsheet2JDBCProcessor.DATABASE_CONNECTIONURL_PROPNAME, "jdbc:postgresql://localhost:5432/databroker");
-        properties.put(Spreadsheet2JDBCProcessor.DATABASE_USERNAME_PROPNAME, "username");
-        properties.put(Spreadsheet2JDBCProcessor.DATABASE_PASSWORD_PROPNAME, "password");
-        Spreadsheet2JDBCProcessor xssfDataProcessor = new Spreadsheet2JDBCProcessor(name, properties);
+        properties.put(CompaniesHouseSpreadsheet2JDBCProcessor.DATABASE_CONNECTIONURL_PROPNAME, "jdbc:postgresql://localhost:5432/databroker");
+        properties.put(CompaniesHouseSpreadsheet2JDBCProcessor.DATABASE_USERNAME_PROPNAME, "username");
+        properties.put(CompaniesHouseSpreadsheet2JDBCProcessor.DATABASE_PASSWORD_PROPNAME, "password");
+        CompaniesHouseSpreadsheet2JDBCProcessor xssfDataProcessor = new CompaniesHouseSpreadsheet2JDBCProcessor(name, properties);
 
         DataFlowNodeLifeCycleControl.processCreatedDataFlowNode(xssfDataProcessor, null);
         

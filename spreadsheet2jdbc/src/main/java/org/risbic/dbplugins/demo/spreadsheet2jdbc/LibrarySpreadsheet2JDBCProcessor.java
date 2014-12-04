@@ -42,15 +42,15 @@ import com.arjuna.databroker.data.jee.annotation.PostCreated;
 import com.arjuna.databroker.data.jee.annotation.PreConfig;
 import com.arjuna.databroker.data.jee.annotation.PreDelete;
 
-public class Spreadsheet2JDBCProcessor implements DataProcessor
+public class LibrarySpreadsheet2JDBCProcessor implements DataProcessor
 {
-    private static final Logger logger = Logger.getLogger(Spreadsheet2JDBCProcessor.class.getName());
+    private static final Logger logger = Logger.getLogger(LibrarySpreadsheet2JDBCProcessor.class.getName());
 
     public static final String DATABASE_CONNECTIONURL_PROPNAME = "Database Connection URL";
     public static final String DATABASE_USERNAME_PROPNAME      = "Database Username";
     public static final String DATABASE_PASSWORD_PROPNAME      = "Database Password";
 
-    public Spreadsheet2JDBCProcessor(String name, Map<String, String> properties)
+    public LibrarySpreadsheet2JDBCProcessor(String name, Map<String, String> properties)
     {
         logger.log(Level.FINE, "XSSFDataProcessor: " + name + ", " + properties);
 
@@ -363,76 +363,76 @@ public class Spreadsheet2JDBCProcessor implements DataProcessor
 
         try
         {
-            StringBuffer createCommentBuffer = new StringBuffer();
+            StringBuffer createCommandBuffer = new StringBuffer();
 
-            createCommentBuffer.append("CREATE TABLE ");
-            createCommentBuffer.append(tableName);
-            createCommentBuffer.append("\n (\n");
-            createCommentBuffer.append("     companyname TEXT,\n");
-            createCommentBuffer.append("     companynumber TEXT,\n");
-            createCommentBuffer.append("     regaddresscareof TEXT,\n");
-            createCommentBuffer.append("     regaddresspobox TEXT,\n");
-            createCommentBuffer.append("     regaddressaddressline1 TEXT,\n");
-            createCommentBuffer.append("     regaddressaddressline2 TEXT,\n");
-            createCommentBuffer.append("     regaddressposttown TEXT,\n");
-            createCommentBuffer.append("     regaddresscounty TEXT,\n");
-            createCommentBuffer.append("     regaddresscountry TEXT,\n");
-            createCommentBuffer.append("     regaddresspostcode TEXT,\n");
-            createCommentBuffer.append("     companycategory TEXT,\n");
-            createCommentBuffer.append("     companystatus TEXT,\n");
-            createCommentBuffer.append("     countryoforigin TEXT,\n");
-            createCommentBuffer.append("     dissolutiondate TEXT,\n");
-            createCommentBuffer.append("     incorporationdate TEXT,\n");
-            createCommentBuffer.append("     accountsaccountrefday TEXT,\n");
-            createCommentBuffer.append("     accountsaccountrefmonth TEXT,\n");
-            createCommentBuffer.append("     accountsnextduedate TEXT,\n");
-            createCommentBuffer.append("     accountslastmadeupdate TEXT,\n");
-            createCommentBuffer.append("     accountsaccountcategory TEXT,\n");
-            createCommentBuffer.append("     returnsnextduedate TEXT,\n");
-            createCommentBuffer.append("     returnslastmadeupdate TEXT,\n");
-            createCommentBuffer.append("     mortgagesnummortcharges TEXT,\n");
-            createCommentBuffer.append("     mortgagesnummortoutstanding TEXT,\n");
-            createCommentBuffer.append("     mortgagesnummortpartsatisfied TEXT,\n");
-            createCommentBuffer.append("     mortgagesnummortsatisfied TEXT,\n");
-            createCommentBuffer.append("     siccodesictext_1 TEXT,\n");
-            createCommentBuffer.append("     siccodesictext_2 TEXT,\n");
-            createCommentBuffer.append("     siccodesictext_3 TEXT,\n");
-            createCommentBuffer.append("     siccodesictext_4 TEXT,\n");
-            createCommentBuffer.append("     limitedpartnershipsnumgenpartners TEXT,\n");
-            createCommentBuffer.append("     limitedpartnershipsnumlimpartners TEXT,\n");
-            createCommentBuffer.append("     uri TEXT,\n");
-            createCommentBuffer.append("     previousname_1condate TEXT,\n");
-            createCommentBuffer.append("     previousname_1companyname TEXT,\n");
-            createCommentBuffer.append("     previousname_2condate TEXT,\n");
-            createCommentBuffer.append("     previousname_2companyname TEXT,\n");
-            createCommentBuffer.append("     previousname_3condate TEXT,\n");
-            createCommentBuffer.append("     previousname_3companyname TEXT,\n");
-            createCommentBuffer.append("     previousname_4condate TEXT,\n");
-            createCommentBuffer.append("     previousname_4companyname TEXT,\n");
-            createCommentBuffer.append("     previousname_5condate TEXT,\n");
-            createCommentBuffer.append("     previousname_5companyname TEXT,\n");
-            createCommentBuffer.append("     previousname_6condate TEXT,\n");
-            createCommentBuffer.append("     previousname_6companyname TEXT,\n");
-            createCommentBuffer.append("     previousname_7condate TEXT,\n");
-            createCommentBuffer.append("     previousname_7companyname TEXT,\n");
-            createCommentBuffer.append("     previousname_8condate TEXT,\n");
-            createCommentBuffer.append("     previousname_8companyname TEXT,\n");
-            createCommentBuffer.append("     previousname_9condate TEXT,\n");
-            createCommentBuffer.append("     previousname_9companyname TEXT,\n");
-            createCommentBuffer.append("     previousname_10condate TEXT,\n");
-            createCommentBuffer.append("     previousname_10companyname TEXT,\n");
-            createCommentBuffer.append("     cleancompanyname TEXT,\n");
-            createCommentBuffer.append("     id BIGSERIAL NOT NULL,\n");
-            createCommentBuffer.append("     CONSTRAINT ");
-            createCommentBuffer.append(tableName);
-            createCommentBuffer.append("_pkey PRIMARY KEY (id)\n");
-            createCommentBuffer.append(") WITH (OIDS=FALSE);");
+            createCommandBuffer.append("CREATE TABLE ");
+            createCommandBuffer.append(tableName);
+            createCommandBuffer.append("\n (\n");
+            createCommandBuffer.append("    companyname TEXT,\n");
+            createCommandBuffer.append("    registerednumber TEXT,\n");
+            createCommandBuffer.append("    typeofaccounts TEXT,\n");
+            createCommandBuffer.append("    corporatestatus TEXT,\n");
+            createCommandBuffer.append("    tradingstatus TEXT,\n");
+            createCommandBuffer.append("    accountingreferencedate TEXT,\n");
+            createCommandBuffer.append("    principalactivitydescription TEXT,\n");
+            createCommandBuffer.append("    tradingaddress1 TEXT,\n");
+            createCommandBuffer.append("    tradingaddress2 TEXT,\n");
+            createCommandBuffer.append("    tradingaddress3 TEXT,\n");
+            createCommandBuffer.append("    tradingaddress4 TEXT,\n");
+            createCommandBuffer.append("    tradingtown TEXT,\n");
+            createCommandBuffer.append("    tradingpostcode TEXT,\n");
+            createCommandBuffer.append("    tradingcountry TEXT,\n");
+            createCommandBuffer.append("    tradingphonenumber TEXT,\n");
+            createCommandBuffer.append("    uksiccode TEXT,\n");
+            createCommandBuffer.append("    uksicdesc TEXT,\n");
+            createCommandBuffer.append("    totalsalesslashturnover TEXT,\n");
+            createCommandBuffer.append("    grossprofit TEXT,\n");
+            createCommandBuffer.append("    ebit TEXT,\n");
+            createCommandBuffer.append("    ebitda TEXT,\n");
+            createCommandBuffer.append("    profitbeforetax TEXT,\n");
+            createCommandBuffer.append("    profitaftertax TEXT,\n");
+            createCommandBuffer.append("    numberofemployees TEXT,\n");
+            createCommandBuffer.append("    commdelphiscorecur TEXT,\n");
+            createCommandBuffer.append("    cleancompanyname TEXT,\n");
+            createCommandBuffer.append("    id BIGSERIAL NOT NULL,\n");
+            createCommandBuffer.append("    CONSTRAINT ");
+            createCommandBuffer.append(tableName);
+            createCommandBuffer.append("_pkey PRIMARY KEY (id)\n");
+            createCommandBuffer.append(") WITH (OIDS=FALSE);");
 
-            Statement statement = _connection.createStatement();
+            Statement createStatement = _connection.createStatement();
 
-            statement.executeUpdate(createCommentBuffer.toString());
+            createStatement.executeUpdate(createCommandBuffer.toString());
 
-            statement.close();
+            createStatement.close();
+
+            StringBuffer nameIndexCommandBuffer = new StringBuffer();
+            
+            nameIndexCommandBuffer.append("CREATE INDEX ");
+            nameIndexCommandBuffer.append(tableName);
+            nameIndexCommandBuffer.append("_companyname_idx ON ");
+            nameIndexCommandBuffer.append(tableName);
+            nameIndexCommandBuffer.append(" USING btree (companyname COLLATE pg_catalog.\"default\");");
+
+            Statement nameIndexStatement = _connection.createStatement();
+
+            nameIndexStatement.executeUpdate(nameIndexCommandBuffer.toString());
+
+            nameIndexStatement.close();
+
+            StringBuffer numberIndexCommandBuffer = new StringBuffer();
+
+            numberIndexCommandBuffer.append("CREATE INDEX ");
+            numberIndexCommandBuffer.append(tableName);
+            numberIndexCommandBuffer.append("_registerednumber_idx ON ");
+            numberIndexCommandBuffer.append(tableName);
+            numberIndexCommandBuffer.append(" USING btree (registerednumber COLLATE pg_catalog.\"default\");");
+
+            Statement numberIndexStatement = _connection.createStatement();
+
+            numberIndexStatement.executeUpdate(numberIndexCommandBuffer.toString());
+
+            numberIndexStatement.close();
 
             return tableName;
         }
