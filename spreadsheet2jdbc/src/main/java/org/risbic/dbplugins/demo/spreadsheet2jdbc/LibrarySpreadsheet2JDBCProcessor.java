@@ -20,9 +20,14 @@ import java.util.UUID;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.ss.usermodel.BuiltinFormats;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
 import org.apache.poi.xssf.model.SharedStringsTable;
+import org.apache.poi.xssf.model.StylesTable;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -31,6 +36,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
+
 import com.arjuna.databroker.data.DataConsumer;
 import com.arjuna.databroker.data.DataFlow;
 import com.arjuna.databroker.data.DataProcessor;
@@ -175,10 +181,12 @@ public class LibrarySpreadsheet2JDBCProcessor implements DataProcessor
         private static final String TYPE_ATTRNAME           = "t";
         private static final String STYLE_ATTRNAME          = "s";
 
-        public SheetHandler(String tableName, SharedStringsTable sharedStringsTable)
+        public SheetHandler(String tableName, SharedStringsTable sharedStringsTable, StylesTable stylesTable)
         {
             _tableName          = tableName;
             _sharedStringsTable = sharedStringsTable;
+            _stylesTable        = stylesTable;
+            _formatter          = new DataFormatter();
             _cellName           = null;
             _cellType           = null;
             _cellStyle          = null;
@@ -191,74 +199,121 @@ public class LibrarySpreadsheet2JDBCProcessor implements DataProcessor
         public void startElement(String uri, String localName, String qName, Attributes attributes)
             throws SAXException
         {
-            if ((localName != null) && localName.equals(CELL_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
+            try
             {
-                _cellName  = attributes.getValue(NONE_NAMESPACE, REF_ATTRNAME);
-                _cellType  = attributes.getValue(NONE_NAMESPACE, TYPE_ATTRNAME);
-                _cellStyle = attributes.getValue(NONE_NAMESPACE, STYLE_ATTRNAME);
+                if ((localName != null) && localName.equals(CELL_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
+                {
+                    _cellName  = attributes.getValue(NONE_NAMESPACE, REF_ATTRNAME);
+                    _cellType  = attributes.getValue(NONE_NAMESPACE, TYPE_ATTRNAME);
+                    _cellStyle = attributes.getValue(NONE_NAMESPACE, STYLE_ATTRNAME);
+                }
+                else if ((localName != null) && localName.equals(VALUE_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
+                    _value.setLength(0);
             }
-            else if ((localName != null) && localName.equals(VALUE_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
-                _value.setLength(0);
+            catch (Throwable throwable)
+            {
+                logger.log(Level.WARNING, "Problem processing start tag", throwable);
+            }
         }
 
         @Override
         public void endElement(String uri, String localName, String qName)
             throws SAXException
         {
-            if ((localName != null) && localName.equals(VALUE_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
+            try
             {
-                if (_cellType.equals("n"))
-                    _rowMap.put(removeRowNumber(_cellName), _value.toString());
-                else if (_cellType.equals("s"))
+                if ((localName != null) && localName.equals(VALUE_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
                 {
-                    String sharedStringsTableIndex = _value.toString();
+                    if (_cellType == null)
+                    {
+                        try
+                        {
+                        	int           styleIndex   = Integer.parseInt(_cellStyle);
+                            XSSFCellStyle style        = _stylesTable.getStyleAt(styleIndex);
+                            short         formatIndex  = style.getDataFormat();
+                            String        formatString = style.getDataFormatString();
+                            if (formatString == null)
+                                formatString = BuiltinFormats.getBuiltinFormat(formatIndex);
+                            String text = _formatter.formatRawCellContents(Double.parseDouble(_value.toString()), formatIndex, formatString);
+                            _rowMap.put(removeRowNumber(_cellName), text);
+                        }
+                        catch (NumberFormatException numberFormatException)
+                        {
+                            logger.log(Level.WARNING, "Failed to parse 'Style' index", numberFormatException);
+                        }
+                        catch (IndexOutOfBoundsException indexOutOfBoundsException)
+                        {
+                            logger.log(Level.WARNING, "Failed to find 'Style'", indexOutOfBoundsException);
+                        }
+                    }
+                    else if (_cellType.equals("n"))
+                        _rowMap.put(removeRowNumber(_cellName), _value.toString());
+                    else if (_cellType.equals("s"))
+                    {
+                        String sharedStringsTableIndex = _value.toString();
+                        try
+                        {
+                            int index = Integer.parseInt(sharedStringsTableIndex);
+                            XSSFRichTextString rtss = new XSSFRichTextString(_sharedStringsTable.getEntryAt(index));
+                            _rowMap.put(removeRowNumber(_cellName), rtss.toString());
+                        }
+                        catch (NumberFormatException numberFormatException)
+                        {
+                            logger.log(Level.WARNING, "Failed to parse 'Shared Strings Table' index '" + sharedStringsTableIndex + "'", numberFormatException);
+                        }
+                        catch (IndexOutOfBoundsException indexOutOfBoundsException)
+                        {
+                            logger.log(Level.WARNING, "Failed to find 'Shared String' - '" + sharedStringsTableIndex + "'", indexOutOfBoundsException);
+                        }
+                    }
+                    else
+                        logger.log(Level.WARNING, "Unsupported cell type '" + _cellType + "'");
+
+                    _value.setLength(0);
+                }
+                else if ((localName != null) && localName.equals(ROW_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
+                {
+                    String sql = rowMap2SQL(_rowMap);
+                    if (logger.isLoggable(Level.FINE))
+                        logger.log(Level.FINE, "SQL: [" + sql + "]");
+
+                    Statement statement = null;
                     try
                     {
-                        int idx = Integer.parseInt(sharedStringsTableIndex);
-                        XSSFRichTextString rtss = new XSSFRichTextString(_sharedStringsTable.getEntryAt(idx));
-                        _rowMap.put(removeRowNumber(_cellName), rtss.toString());
+                        statement = _connection.createStatement();
+                        statement.executeUpdate(sql);
+                        statement.close();
+
+                        _rowCount++;
                     }
-                    catch (NumberFormatException numberFormatException)
+                    catch (Throwable throwable)
                     {
-                        logger.log(Level.WARNING, "Failed to parse 'Shared Strings Table' index '" + sharedStringsTableIndex + "'", numberFormatException);
+                        logger.log(Level.WARNING, "Problem adding data: \'" + sql + "\'", throwable);
                     }
-                }
-                else
-                    logger.log(Level.WARNING, "Unsupported cell type '" + _cellType + "'");
 
-                _value.setLength(0);
+                    _rowMap.clear();
+                }
+                else if ((localName != null) && localName.equals(SHEETDATA_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
+                    _dataProvider.produce(_tableName);
             }
-            else if ((localName != null) && localName.equals(ROW_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
+            catch (Throwable throwable)
             {
-                String sql = rowMap2SQL(_rowMap);
-                if (logger.isLoggable(Level.FINE))
-                    logger.log(Level.FINE, "SQL: [" + sql + "]");
-
-                Statement statement = null;
-                try
-                {
-                    statement = _connection.createStatement();
-                    statement.executeUpdate(sql);
-                    statement.close();
-
-                    _rowCount++;
-                }
-                catch (Throwable throwable)
-                {
-                    logger.log(Level.WARNING, "Problem adding data: \'" + sql + "\'", throwable);
-                }
-
-                _rowMap.clear();
+                logger.log(Level.WARNING, "Problem processing end tag", throwable);
             }
-            else if ((localName != null) && localName.equals(SHEETDATA_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
-                _dataProvider.produce(_tableName);
         }
 
         @Override
         public void characters(char[] characters, int start, int length)
             throws SAXException
         {
-            _value.append(characters, start, length);
+        	try
+        	{
+                _value.append(characters, start, length);
+        	}
+            catch (Throwable throwable)
+            {
+                logger.log(Level.WARNING, "Problem processing characters", throwable);
+            }
         }
 
         private String rowMap2SQL(Map<String, String> rowMap)
@@ -307,6 +362,8 @@ public class LibrarySpreadsheet2JDBCProcessor implements DataProcessor
 
         private String              _tableName;
         private SharedStringsTable  _sharedStringsTable;
+        private StylesTable         _stylesTable;
+        private DataFormatter       _formatter;
         private String              _cellName;
         private String              _cellType;
         private String              _cellStyle;
@@ -326,6 +383,7 @@ public class LibrarySpreadsheet2JDBCProcessor implements DataProcessor
             OPCPackage         opcPackage         = OPCPackage.open(data);
             XSSFReader         xssfReader         = new XSSFReader(opcPackage);
             SharedStringsTable sharedStringsTable = xssfReader.getSharedStringsTable();
+            StylesTable        stylesTable        = xssfReader.getStylesTable();
 
             XMLReader      workbookParser  = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
             ContentHandler workbookHandler = new WorkbookHandler(refIdMap);
@@ -337,7 +395,7 @@ public class LibrarySpreadsheet2JDBCProcessor implements DataProcessor
             workbookInputStream.close();
 
             XMLReader      sheetParser  = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
-            ContentHandler sheetHandler = new SheetHandler(tableName, sharedStringsTable);
+            ContentHandler sheetHandler = new SheetHandler(tableName, sharedStringsTable, stylesTable);
             sheetParser.setContentHandler(sheetHandler);
 
             Iterator<InputStream> sheetInputStreamIterator = xssfReader.getSheetsData();
