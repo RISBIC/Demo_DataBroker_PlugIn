@@ -56,6 +56,11 @@ public class CompaniesHouseSpreadsheet2JDBCProcessor implements DataProcessor
     public static final String DATABASE_USERNAME_PROPNAME      = "Database Username";
     public static final String DATABASE_PASSWORD_PROPNAME      = "Database Password";
 
+    public CompaniesHouseSpreadsheet2JDBCProcessor()
+    {
+        logger.log(Level.FINE, "CompaniesHouseSpreadsheet2JDBCProcessor);
+    }
+
     public CompaniesHouseSpreadsheet2JDBCProcessor(String name, Map<String, String> properties)
     {
         logger.log(Level.FINE, "CompaniesHouseSpreadsheet2JDBCProcessor: " + name + ", " + properties);
