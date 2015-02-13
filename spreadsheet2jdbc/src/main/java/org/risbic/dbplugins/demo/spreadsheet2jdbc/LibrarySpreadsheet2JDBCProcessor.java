@@ -56,6 +56,11 @@ public class LibrarySpreadsheet2JDBCProcessor implements DataProcessor
     public static final String DATABASE_USERNAME_PROPNAME      = "Database Username";
     public static final String DATABASE_PASSWORD_PROPNAME      = "Database Password";
 
+    public LibrarySpreadsheet2JDBCProcessor()
+    {
+        logger.log(Level.FINE, "LibrarySpreadsheet2JDBCProcessor");
+    }
+
     public LibrarySpreadsheet2JDBCProcessor(String name, Map<String, String> properties)
     {
         logger.log(Level.FINE, "LibrarySpreadsheet2JDBCProcessor: " + name + ", " + properties);
