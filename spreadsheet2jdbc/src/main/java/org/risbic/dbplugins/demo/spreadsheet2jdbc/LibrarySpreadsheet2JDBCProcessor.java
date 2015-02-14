@@ -45,6 +45,7 @@ import com.arjuna.databroker.data.jee.annotation.DataConsumerInjection;
 import com.arjuna.databroker.data.jee.annotation.DataProviderInjection;
 import com.arjuna.databroker.data.jee.annotation.PostConfig;
 import com.arjuna.databroker.data.jee.annotation.PostCreated;
+import com.arjuna.databroker.data.jee.annotation.PostRecovery;
 import com.arjuna.databroker.data.jee.annotation.PreConfig;
 import com.arjuna.databroker.data.jee.annotation.PreDelete;
 
@@ -108,6 +109,7 @@ public class LibrarySpreadsheet2JDBCProcessor implements DataProcessor
     }
 
     @PostCreated
+    @PostRecovery
     @PostConfig
     public void startup()
     {
