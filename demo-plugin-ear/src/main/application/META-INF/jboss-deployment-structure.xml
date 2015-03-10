@@ -21,4 +21,13 @@
             <module name="deployment.databroker.ear.data-common-jee.jar"/>
         </dependencies>
     </sub-deployment>
+
+    <sub-deployment name="spreadsheetmetadata-1.0.0p1m1.jar">
+        <dependencies>
+            <module name="deployment.databroker.ear.data-common.jar"/>
+            <module name="deployment.databroker.ear.data-common-jee.jar"/>
+            <module name="deployment.databroker.ear.metadata-common.jar"/>
+            <module name="deployment.databroker.ear.metadata-store-1.0.0p1m3l.jar"/>
+        </dependencies>
+    </sub-deployment>
 </jboss-deployment-structure>

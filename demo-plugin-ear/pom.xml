@@ -64,6 +64,12 @@
             <version>1.0.0p1m1</version>
             <type>ejb</type>
         </dependency>
+        <dependency>
+            <groupId>org.risbic.dbplugins.demo</groupId>
+            <artifactId>spreadsheetmetadata</artifactId>
+            <version>1.0.0p1m1</version>
+            <type>ejb</type>
+        </dependency>
     </dependencies>
 
     <build>
@@ -86,6 +92,11 @@
                             <includeInApplicationXml>true</includeInApplicationXml>
                         </jarModule>
                         <jarModule>
+                            <groupId>com.arjuna.dbutils.metadata</groupId>
+                            <artifactId>metadata-utils-xssf</artifactId>
+                            <includeInApplicationXml>true</includeInApplicationXml>
+                        </jarModule>
+                        <jarModule>
                             <groupId>commons-codec</groupId>
                             <artifactId>commons-codec</artifactId>
                             <excluded>true</excluded>
@@ -98,6 +109,10 @@
                         <ejbModule>
                             <groupId>org.risbic.dbplugins.demo</groupId>
                             <artifactId>spreadsheet2jdbc</artifactId>
+                        </ejbModule>
+                        <ejbModule>
+                            <groupId>org.risbic.dbplugins.demo</groupId>
+                            <artifactId>spreadsheetmetadata</artifactId>
                         </ejbModule>
                         <ejbModule>
                             <groupId>org.risbic.dbplugins.demo</groupId>

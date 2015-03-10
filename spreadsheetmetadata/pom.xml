@@ -15,16 +15,26 @@
         <version>1.0.0p1m1</version>
     </parent>
 
-    <artifactId>demo-plugin</artifactId>
+    <artifactId>spreadsheetmetadata</artifactId>
 
     <packaging>ejb</packaging>
 
-    <name>Demo DataBroker PlugIn</name>
+    <name>Spreadsheet Metadata</name>
 
     <dependencies>
         <dependency>
             <groupId>org.jboss.spec.javax.ejb</groupId>
             <artifactId>jboss-ejb-api_${ejb-api.version}_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-${jpa-api.version}-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -40,16 +50,31 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.risbic.dbplugins.demo</groupId>
-            <artifactId>spreadsheet2jdbc</artifactId>
-            <version>1.0.0p1m1</version>
-            <type>ejb</type>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.10.1</version>
         </dependency>
         <dependency>
-            <groupId>org.risbic.dbplugins.demo</groupId>
-            <artifactId>spreadsheetmetadata</artifactId>
-            <version>1.0.0p1m1</version>
-            <type>ejb</type>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.10.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.arjuna.databroker</groupId>
+            <artifactId>metadata-common</artifactId>
+            <version>${version.com.arjuna.databroker}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.arjuna.databroker</groupId>
+            <artifactId>metadata-store</artifactId>
+            <version>${version.com.arjuna.databroker}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.arjuna.dbutils.metadata</groupId>
+            <artifactId>metadata-utils-xssf</artifactId>
+            <version>${version.com.arjuna.dbutils.metadata}</version>
         </dependency>
     </dependencies>
 </project>
