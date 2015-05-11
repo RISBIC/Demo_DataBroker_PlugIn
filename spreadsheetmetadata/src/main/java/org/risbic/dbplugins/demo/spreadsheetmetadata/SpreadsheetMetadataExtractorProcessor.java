@@ -128,7 +128,6 @@ public class SpreadsheetMetadataExtractorProcessor implements DataProcessor
         }
         catch (Throwable throwable)
         {
-            throwable.printStackTrace(System.err);
             logger.log(Level.WARNING, "Problem extracting metadata", throwable);
         }
     }
