@@ -174,7 +174,7 @@ public class SpreadsheetMetadataExtractorProcessor implements DataProcessor
     }
 
     public String _metadataId;
-    
+
     private String               _name;
     private Map<String, String>  _properties;
     private DataFlow             _dataFlow;

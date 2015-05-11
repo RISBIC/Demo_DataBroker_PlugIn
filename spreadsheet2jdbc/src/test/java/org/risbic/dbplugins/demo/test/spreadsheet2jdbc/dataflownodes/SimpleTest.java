@@ -30,11 +30,11 @@ public class SimpleTest
         CompaniesHouseSpreadsheet2JDBCProcessor xssfDataProcessor = new CompaniesHouseSpreadsheet2JDBCProcessor(name, properties);
 
         dataFlowNodeLifeCycleControl.completeCreationAndActivateDataFlowNode(UUID.randomUUID().toString(), xssfDataProcessor, null);
-        
+
         File file = new File("Test01.xlsx");
 
         ((ObserverDataConsumer<File>) xssfDataProcessor.getDataConsumer(File.class)).consume(null, file);
-        
+
         dataFlowNodeLifeCycleControl.removeDataFlowNode(xssfDataProcessor);
     }
 }

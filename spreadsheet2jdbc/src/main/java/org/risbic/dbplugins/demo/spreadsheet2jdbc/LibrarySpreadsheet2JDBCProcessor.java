@@ -235,7 +235,7 @@ public class LibrarySpreadsheet2JDBCProcessor implements DataProcessor
                     {
                         try
                         {
-                        	int           styleIndex   = Integer.parseInt(_cellStyle);
+                            int           styleIndex   = Integer.parseInt(_cellStyle);
                             XSSFCellStyle style        = _stylesTable.getStyleAt(styleIndex);
                             short         formatIndex  = style.getDataFormat();
                             String        formatString = style.getDataFormatString();
@@ -313,10 +313,10 @@ public class LibrarySpreadsheet2JDBCProcessor implements DataProcessor
         public void characters(char[] characters, int start, int length)
             throws SAXException
         {
-        	try
-        	{
+            try
+            {
                 _value.append(characters, start, length);
-        	}
+            }
             catch (Throwable throwable)
             {
                 logger.log(Level.WARNING, "Problem processing characters", throwable);
@@ -470,7 +470,7 @@ public class LibrarySpreadsheet2JDBCProcessor implements DataProcessor
             createStatement.close();
 
             StringBuffer nameIndexCommandBuffer = new StringBuffer();
-            
+
             nameIndexCommandBuffer.append("CREATE INDEX ");
             nameIndexCommandBuffer.append(tableName);
             nameIndexCommandBuffer.append("_companyname_idx ON ");
@@ -547,7 +547,7 @@ public class LibrarySpreadsheet2JDBCProcessor implements DataProcessor
     }
 
     private Connection _connection;
-    
+
     private String               _name;
     private Map<String, String>  _properties;
     private DataFlow             _dataFlow;

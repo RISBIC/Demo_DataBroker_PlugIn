@@ -237,7 +237,7 @@ public class CompaniesHouseSpreadsheet2JDBCProcessor implements DataProcessor
                     {
                         try
                         {
-                        	int           styleIndex   = Integer.parseInt(_cellStyle);
+                            int           styleIndex   = Integer.parseInt(_cellStyle);
                             XSSFCellStyle style        = _stylesTable.getStyleAt(styleIndex);
                             short         formatIndex  = style.getDataFormat();
                             String        formatString = style.getDataFormatString();
@@ -277,7 +277,7 @@ public class CompaniesHouseSpreadsheet2JDBCProcessor implements DataProcessor
                     }
                     else
                         logger.log(Level.WARNING, "Unsupported cell type '" + _cellType + "'");
-    
+
                     _value.setLength(0);
                 }
                 else if ((localName != null) && localName.equals(ROW_TAGNAME) && (uri != null) && uri.equals(SPREADSHEETML_NAMESPACE))
@@ -292,7 +292,7 @@ public class CompaniesHouseSpreadsheet2JDBCProcessor implements DataProcessor
                         statement = _connection.createStatement();
                         statement.executeUpdate(sql);
                         statement.close();
-    
+
                         _rowCount++;
                     }
                     catch (Throwable throwable)
@@ -315,10 +315,10 @@ public class CompaniesHouseSpreadsheet2JDBCProcessor implements DataProcessor
         public void characters(char[] characters, int start, int length)
             throws SAXException
         {
-        	try
-        	{
+            try
+            {
                 _value.append(characters, start, length);
-        	}
+            }
             catch (Throwable throwable)
             {
                 logger.log(Level.WARNING, "Problem processing characters", throwable);
@@ -500,7 +500,7 @@ public class CompaniesHouseSpreadsheet2JDBCProcessor implements DataProcessor
             createStatement.close();
 
             StringBuffer nameIndexCommandBuffer = new StringBuffer();
-            
+
             nameIndexCommandBuffer.append("CREATE INDEX ");
             nameIndexCommandBuffer.append(tableName);
             nameIndexCommandBuffer.append("_companyname_idx ON ");
@@ -577,7 +577,7 @@ public class CompaniesHouseSpreadsheet2JDBCProcessor implements DataProcessor
     }
 
     private Connection _connection;
-    
+
     private String               _name;
     private Map<String, String>  _properties;
     private DataFlow             _dataFlow;
