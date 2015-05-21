@@ -17,6 +17,7 @@
     <sub-deployment name="spreadsheet2jdbc-1.0.0p1m1.jar">
         <dependencies>
             <module name="org.postgresql" slot="main"/>
+            <!-- module name="org.postgresql.jdbc" slot="main"/ For OpenShift -->
             <module name="deployment.databroker.ear.data-common.jar"/>
             <module name="deployment.databroker.ear.data-common-jee.jar"/>
         </dependencies>

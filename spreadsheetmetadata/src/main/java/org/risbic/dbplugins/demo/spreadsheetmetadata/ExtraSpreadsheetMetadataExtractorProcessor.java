@@ -27,15 +27,16 @@ import com.arjuna.databroker.data.jee.annotation.PreDelete;
 import com.arjuna.databroker.metadata.MetadataContentStore;
 import com.arjuna.dbutils.metadata.xssf.generator.XSSFSpreadsheetMetadataGenerator;
 
-public class SpreadsheetMetadataExtractorProcessor implements DataProcessor
+public class ExtraSpreadsheetMetadataExtractorProcessor implements DataProcessor
 {
-    private static final Logger logger = Logger.getLogger(SpreadsheetMetadataExtractorProcessor.class.getName());
+    private static final Logger logger = Logger.getLogger(ExtraSpreadsheetMetadataExtractorProcessor.class.getName());
 
     public static final String METADATABLOB_ID_PROPNAME = "Metadata Blog ID";
+    public static final String LOCATION_PROPNAME        = "Location";
 
-    public SpreadsheetMetadataExtractorProcessor()
+    public ExtraSpreadsheetMetadataExtractorProcessor()
     {
-        logger.log(Level.FINE, "SpreadsheetMetadataExtractorProcessor");
+        logger.log(Level.FINE, "ExtraSpreadsheetMetadataExtractorProcessor");
 
         try
         {
@@ -43,13 +44,13 @@ public class SpreadsheetMetadataExtractorProcessor implements DataProcessor
         }
         catch (Throwable throwable)
         {
-            logger.log(Level.WARNING, "SpreadsheetMetadataExtractorProcessor: no metadataContentStore found", throwable);
+            logger.log(Level.WARNING, "ExtraSpreadsheetMetadataExtractorProcessor: no metadataContentStore found", throwable);
         }
     }
 
-    public SpreadsheetMetadataExtractorProcessor(String name, Map<String, String> properties)
+    public ExtraSpreadsheetMetadataExtractorProcessor(String name, Map<String, String> properties)
     {
-        logger.log(Level.FINE, "SpreadsheetMetadataExtractorProcessor: " + name + ", " + properties);
+        logger.log(Level.FINE, "ExtraSpreadsheetMetadataExtractorProcessor: " + name + ", " + properties);
 
         _name       = name;
         _properties = properties;
@@ -60,7 +61,7 @@ public class SpreadsheetMetadataExtractorProcessor implements DataProcessor
         }
         catch (Throwable throwable)
         {
-            logger.log(Level.WARNING, "SpreadsheetMetadataExtractorProcessor: no metadataContentStore found", throwable);
+            logger.log(Level.WARNING, "ExtraSpreadsheetMetadataExtractorProcessor: no metadataContentStore found", throwable);
         }
     }
 
@@ -106,6 +107,9 @@ public class SpreadsheetMetadataExtractorProcessor implements DataProcessor
     public void startup()
     {
         _metadataId = _properties.get(METADATABLOB_ID_PROPNAME);
+        _location   = _properties.get(LOCATION_PROPNAME);
+        if ((_location != null) && ("".equals(_location.trim())))
+            _location = null;
     }
 
     @PreConfig
@@ -113,15 +117,16 @@ public class SpreadsheetMetadataExtractorProcessor implements DataProcessor
     public void shutdown()
     {
         _metadataId = null;
+        _location   = null;
     }
 
-    public void consume(byte[] data)
+    public void consume(Map data)
     {
         try
         {
             URI rdfURI = URI.create("http://rdf.arjuna.com/spreadsheet/" + _metadataId);
-            XSSFSpreadsheetMetadataGenerator xssfSpeadsheetMetadataGenerator = new XSSFSpreadsheetMetadataGenerator();
-            String rdf = xssfSpeadsheetMetadataGenerator.generateXSSFSpeadsheetMetadata(rdfURI, data);
+            XSSFSpreadsheetMetadataGenerator xssfSpreadsheetMetadataGenerator = new XSSFSpreadsheetMetadataGenerator();
+            String rdf = xssfSpreadsheetMetadataGenerator.generateXSSFSpeadsheetMetadata(rdfURI, (Map<String, Object>) data);
             _metadataContentStore.createOverwrite(_metadataId, rdf);
 
             _dataProvider.produce(data);
@@ -146,7 +151,7 @@ public class SpreadsheetMetadataExtractorProcessor implements DataProcessor
     @SuppressWarnings("unchecked")
     public <T> DataConsumer<T> getDataConsumer(Class<T> dataClass)
     {
-        if (byte[].class.isAssignableFrom(dataClass))
+        if (Map.class.isAssignableFrom(dataClass))
             return (DataConsumer<T>) _dataConsumer;
         else
             return null;
@@ -157,7 +162,7 @@ public class SpreadsheetMetadataExtractorProcessor implements DataProcessor
     {
         Set<Class<?>> dataProviderDataClasses = new HashSet<Class<?>>();
 
-        dataProviderDataClasses.add(byte[].class);
+        dataProviderDataClasses.add(Map.class);
 
         return dataProviderDataClasses;
     }
@@ -166,21 +171,22 @@ public class SpreadsheetMetadataExtractorProcessor implements DataProcessor
     @SuppressWarnings("unchecked")
     public <T> DataProvider<T> getDataProvider(Class<T> dataClass)
     {
-        if (byte[].class.isAssignableFrom(dataClass))
+        if (Map.class.isAssignableFrom(dataClass))
             return (DataProvider<T>) _dataProvider;
         else
             return null;
     }
 
     public String _metadataId;
+    public String _location;
 
-    private String               _name;
-    private Map<String, String>  _properties;
-    private DataFlow             _dataFlow;
+    private String              _name;
+    private Map<String, String> _properties;
+    private DataFlow            _dataFlow;
     @DataConsumerInjection(methodName="consume")
-    private DataConsumer<byte[]> _dataConsumer;
+    private DataConsumer<Map>   _dataConsumer;
     @DataProviderInjection
-    private DataProvider<byte[]> _dataProvider;
+    private DataProvider<Map>   _dataProvider;
 
     private MetadataContentStore _metadataContentStore;
 }
