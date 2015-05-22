@@ -142,7 +142,7 @@ public class ExtraSpreadsheetMetadataExtractorProcessor implements DataProcessor
     {
         Set<Class<?>> dataConsumerDataClasses = new HashSet<Class<?>>();
 
-        dataConsumerDataClasses.add(byte[].class);
+        dataConsumerDataClasses.add(Map.class);
 
         return dataConsumerDataClasses;
     }
