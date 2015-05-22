@@ -15,8 +15,8 @@ import com.arjuna.databroker.data.DataFlowNodeFactory;
 import com.arjuna.databroker.data.DataFlowNodeFactoryInventory;
 import org.risbic.dbplugins.demo.spreadsheet2jdbc.CompaniesHouseSpreadsheet2JDBCProcessorFactory;
 import org.risbic.dbplugins.demo.spreadsheet2jdbc.LibrarySpreadsheet2JDBCProcessorFactory;
-import org.risbic.dbplugins.demo.spreadsheetmetadata.ExtraSpreadsheetMetadataExtractorProcessorFactory;
 import org.risbic.dbplugins.demo.spreadsheetmetadata.SpreadsheetMetadataExtractorProcessorFactory;
+import org.risbic.dbplugins.demo.spreadsheetmetadata.ExtraSpreadsheetMetadataExtractorProcessorFactory;
 
 @Startup
 @Singleton
@@ -43,7 +43,7 @@ public class DemoDataFlowNodeFactoriesSetup
         _dataFlowNodeFactoryInventory.removeDataFlowNodeFactory("Library Spreadsheet to JDBC Processor Factory");
         _dataFlowNodeFactoryInventory.removeDataFlowNodeFactory("Spreadsheet Metadata Extractor Processor Factory");
         _dataFlowNodeFactoryInventory.removeDataFlowNodeFactory("Extra Spreadsheet Metadata Extractor Processor Factory");
-           }
+    }
 
     @EJB(lookup="java:global/databroker/data-core-jee/DataFlowNodeFactoryInventory")
     private DataFlowNodeFactoryInventory _dataFlowNodeFactoryInventory;
