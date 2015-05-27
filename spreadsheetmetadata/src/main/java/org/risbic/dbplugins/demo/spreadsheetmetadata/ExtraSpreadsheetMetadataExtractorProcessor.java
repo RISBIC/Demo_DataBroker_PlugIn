@@ -108,7 +108,7 @@ public class ExtraSpreadsheetMetadataExtractorProcessor implements DataProcessor
     {
         _metadataId = _properties.get(METADATABLOB_ID_PROPNAME);
         _location   = _properties.get(LOCATION_PROPNAME);
-        if ((_location != null) && ("".equals(_location.trim())))
+        if ((_location != null) && "".equals(_location.trim()))
             _location = null;
     }
 
@@ -124,6 +124,13 @@ public class ExtraSpreadsheetMetadataExtractorProcessor implements DataProcessor
     {
         try
         {
+            Object filename = data.get("filename");
+            if ((filename != null) && (filename instanceof String))
+                data.put("resourcename", filename);
+            data.put("resourceformat", "xlsx");
+            if (_location != null)
+                data.put("location", _location);
+
             URI rdfURI = URI.create("http://rdf.arjuna.com/spreadsheet/" + _metadataId);
             XSSFSpreadsheetMetadataGenerator xssfSpreadsheetMetadataGenerator = new XSSFSpreadsheetMetadataGenerator();
             String rdf = xssfSpreadsheetMetadataGenerator.generateXSSFSpeadsheetMetadata(rdfURI, (Map<String, Object>) data);
