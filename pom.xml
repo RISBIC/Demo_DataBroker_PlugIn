@@ -52,6 +52,7 @@
 
     <modules>
         <module>spreadsheetmetadata</module>
+        <module>jsonmetadata</module>
         <module>spreadsheet2jdbc</module>
         <module>demo-plugin</module>
         <module>demo-plugin-ear</module>
