@@ -51,5 +51,11 @@
             <version>1.0.0p1m1</version>
             <type>ejb</type>
         </dependency>
+        <dependency>
+            <groupId>org.risbic.dbplugins.demo</groupId>
+            <artifactId>jsonmetadata</artifactId>
+            <version>1.0.0p1m1</version>
+            <type>ejb</type>
+        </dependency>
     </dependencies>
 </project>

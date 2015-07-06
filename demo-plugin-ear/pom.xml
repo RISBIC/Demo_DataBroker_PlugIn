@@ -53,6 +53,12 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20140107</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
             <groupId>org.risbic.dbplugins.demo</groupId>
             <artifactId>demo-plugin</artifactId>
             <version>1.0.0p1m1</version>
@@ -67,6 +73,12 @@
         <dependency>
             <groupId>org.risbic.dbplugins.demo</groupId>
             <artifactId>spreadsheetmetadata</artifactId>
+            <version>1.0.0p1m1</version>
+            <type>ejb</type>
+        </dependency>
+        <dependency>
+            <groupId>org.risbic.dbplugins.demo</groupId>
+            <artifactId>jsonmetadata</artifactId>
             <version>1.0.0p1m1</version>
             <type>ejb</type>
         </dependency>
@@ -92,6 +104,11 @@
                             <includeInApplicationXml>true</includeInApplicationXml>
                         </jarModule>
                         <jarModule>
+                            <groupId>org.apache.poi</groupId>
+                            <artifactId>poi-ooxml</artifactId>
+                            <includeInApplicationXml>true</includeInApplicationXml>
+                        </jarModule>
+                        <jarModule>
                             <groupId>com.arjuna.dbutils.metadata</groupId>
                             <artifactId>metadata-utils-xssf</artifactId>
                             <includeInApplicationXml>true</includeInApplicationXml>
@@ -106,6 +123,11 @@
                             <artifactId>xercesImpl</artifactId>
                             <includeInApplicationXml>true</includeInApplicationXml>
                         </jarModule>
+                        <jarModule>
+                            <groupId>org.json</groupId>
+                            <artifactId>json</artifactId>
+                            <includeInApplicationXml>true</includeInApplicationXml>
+                        </jarModule>
                         <ejbModule>
                             <groupId>org.risbic.dbplugins.demo</groupId>
                             <artifactId>spreadsheet2jdbc</artifactId>
@@ -113,6 +135,10 @@
                         <ejbModule>
                             <groupId>org.risbic.dbplugins.demo</groupId>
                             <artifactId>spreadsheetmetadata</artifactId>
+                        </ejbModule>
+                        <ejbModule>
+                            <groupId>org.risbic.dbplugins.demo</groupId>
+                            <artifactId>jsonmetadata</artifactId>
                         </ejbModule>
                         <ejbModule>
                             <groupId>org.risbic.dbplugins.demo</groupId>
