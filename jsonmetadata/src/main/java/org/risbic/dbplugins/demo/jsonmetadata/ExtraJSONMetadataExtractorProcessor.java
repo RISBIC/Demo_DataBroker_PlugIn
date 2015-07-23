@@ -36,7 +36,7 @@ public class ExtraJSONMetadataExtractorProcessor implements DataProcessor
 
     public ExtraJSONMetadataExtractorProcessor()
     {
-        logger.log(Level.FINE, "ExtraSpreadsheetMetadataExtractorProcessor");
+        logger.log(Level.FINE, "ExtraJSONMetadataExtractorProcessor");
 
         try
         {
@@ -44,13 +44,13 @@ public class ExtraJSONMetadataExtractorProcessor implements DataProcessor
         }
         catch (Throwable throwable)
         {
-            logger.log(Level.WARNING, "ExtraSpreadsheetMetadataExtractorProcessor: no metadataContentStore found", throwable);
+            logger.log(Level.WARNING, "ExtraJSONMetadataExtractorProcessor: no metadataContentStore found", throwable);
         }
     }
 
     public ExtraJSONMetadataExtractorProcessor(String name, Map<String, String> properties)
     {
-        logger.log(Level.FINE, "ExtraSpreadsheetMetadataExtractorProcessor: " + name + ", " + properties);
+        logger.log(Level.FINE, "ExtraJSONMetadataExtractorProcessor: " + name + ", " + properties);
 
         _name       = name;
         _properties = properties;
@@ -61,7 +61,7 @@ public class ExtraJSONMetadataExtractorProcessor implements DataProcessor
         }
         catch (Throwable throwable)
         {
-            logger.log(Level.WARNING, "ExtraSpreadsheetMetadataExtractorProcessor: no metadataContentStore found", throwable);
+            logger.log(Level.WARNING, "ExtraJSONMetadataExtractorProcessor: no metadataContentStore found", throwable);
         }
     }
 
