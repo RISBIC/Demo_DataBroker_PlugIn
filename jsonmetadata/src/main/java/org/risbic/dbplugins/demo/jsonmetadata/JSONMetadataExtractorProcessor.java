@@ -35,7 +35,7 @@ public class JSONMetadataExtractorProcessor implements DataProcessor
 
     public JSONMetadataExtractorProcessor()
     {
-        logger.log(Level.FINE, "SpreadsheetMetadataExtractorProcessor");
+        logger.log(Level.FINE, "JSONMetadataExtractorProcessor");
 
         try
         {
@@ -43,13 +43,13 @@ public class JSONMetadataExtractorProcessor implements DataProcessor
         }
         catch (Throwable throwable)
         {
-            logger.log(Level.WARNING, "SpreadsheetMetadataExtractorProcessor: no metadataContentStore found", throwable);
+            logger.log(Level.WARNING, "JSONMetadataExtractorProcessor: no metadataContentStore found", throwable);
         }
     }
 
     public JSONMetadataExtractorProcessor(String name, Map<String, String> properties)
     {
-        logger.log(Level.FINE, "SpreadsheetMetadataExtractorProcessor: " + name + ", " + properties);
+        logger.log(Level.FINE, "JSONMetadataExtractorProcessor: " + name + ", " + properties);
 
         _name       = name;
         _properties = properties;
@@ -60,7 +60,7 @@ public class JSONMetadataExtractorProcessor implements DataProcessor
         }
         catch (Throwable throwable)
         {
-            logger.log(Level.WARNING, "SpreadsheetMetadataExtractorProcessor: no metadataContentStore found", throwable);
+            logger.log(Level.WARNING, "JSONMetadataExtractorProcessor: no metadataContentStore found", throwable);
         }
     }
 
@@ -121,7 +121,7 @@ public class JSONMetadataExtractorProcessor implements DataProcessor
         {
             URI rdfURI = URI.create("http://rdf.arjuna.com/json/" + _metadataId);
             JSONArrayMetadataGenerator jsonArrayMetadataGenerator = new JSONArrayMetadataGenerator();
-            String rdf = jsonArrayMetadataGenerator.generateJSONArrayMetadata(rdfURI, data);
+            String rdf = jsonArrayMetadataGenerator.generateJSONMetadata(rdfURI, data);
             _metadataContentStore.createOverwrite(_metadataId, rdf);
 
             _dataProvider.produce(data);
