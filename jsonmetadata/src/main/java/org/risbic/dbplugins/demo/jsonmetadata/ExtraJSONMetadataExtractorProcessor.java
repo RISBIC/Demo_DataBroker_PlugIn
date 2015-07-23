@@ -125,7 +125,7 @@ public class ExtraJSONMetadataExtractorProcessor implements DataProcessor
         try
         {
             Object filename = data.get("filename");
-            if ((filename != null) && (filename instanceof String))
+            if ((data.get("resourcename") == null) && (filename != null) && (filename instanceof String))
                 data.put("resourcename", filename);
             data.put("resourceformat", "json");
             if (_location != null)
