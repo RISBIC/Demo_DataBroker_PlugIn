@@ -104,11 +104,6 @@
                             <includeInApplicationXml>true</includeInApplicationXml>
                         </jarModule>
                         <jarModule>
-                            <groupId>org.apache.poi</groupId>
-                            <artifactId>poi-ooxml</artifactId>
-                            <includeInApplicationXml>true</includeInApplicationXml>
-                        </jarModule>
-                        <jarModule>
                             <groupId>com.arjuna.dbutils.metadata</groupId>
                             <artifactId>metadata-utils-xssf</artifactId>
                             <includeInApplicationXml>true</includeInApplicationXml>
