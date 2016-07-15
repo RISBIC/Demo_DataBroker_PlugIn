@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.risbic.dbplugins.demo</groupId>
         <artifactId>demo-plugin-parent</artifactId>
-        <version>1.0.0p1m1</version>
+        <version>1.0.0p2m1</version>
     </parent>
 
     <artifactId>demo-plugin</artifactId>
@@ -42,19 +42,19 @@
         <dependency>
             <groupId>org.risbic.dbplugins.demo</groupId>
             <artifactId>spreadsheet2jdbc</artifactId>
-            <version>1.0.0p1m1</version>
+            <version>1.0.0p2m1</version>
             <type>ejb</type>
         </dependency>
         <dependency>
             <groupId>org.risbic.dbplugins.demo</groupId>
             <artifactId>spreadsheetmetadata</artifactId>
-            <version>1.0.0p1m1</version>
+            <version>1.0.0p2m1</version>
             <type>ejb</type>
         </dependency>
         <dependency>
             <groupId>org.risbic.dbplugins.demo</groupId>
             <artifactId>jsonmetadata</artifactId>
-            <version>1.0.0p1m1</version>
+            <version>1.0.0p2m1</version>
             <type>ejb</type>
         </dependency>
     </dependencies>
