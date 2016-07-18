@@ -18,8 +18,10 @@
     <name>Demo DataBroker PlugIn Parent</name>
 
     <properties>
+        <version.org.risbic.dbplugins.demo>1.0.0p2m1</version.org.risbic.dbplugins.demo>
         <version.com.arjuna.databroker>1.0.0</version.com.arjuna.databroker>
         <version.com.arjuna.dbutils.metadata>1.0.0</version.com.arjuna.dbutils.metadata>
+        <version.com.arjuna.dbutils.testsupport>1.0.0</version.com.arjuna.dbutils.testsupport>
 
         <jboss-as.username>username</jboss-as.username>
         <jboss-as.password>password</jboss-as.password>
