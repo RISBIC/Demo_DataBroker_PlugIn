@@ -40,7 +40,7 @@ public class ExtraSpreadsheetMetadataExtractorProcessor implements DataProcessor
 
         try
         {
-            _metadataContentStore = (MetadataContentStore) new InitialContext().lookup("java:global/databroker/metadata-store-1.0.0/MetadataUtils");
+            _metadataContentStore = (MetadataContentStore) new InitialContext().lookup("java:global/databroker/metadata-store-1.0.0/MetadataContentFilesystemStore");
         }
         catch (Throwable throwable)
         {
@@ -57,7 +57,7 @@ public class ExtraSpreadsheetMetadataExtractorProcessor implements DataProcessor
 
         try
         {
-            _metadataContentStore = (MetadataContentStore) new InitialContext().lookup("java:global/databroker/metadata-store-1.0.0/MetadataUtils");
+            _metadataContentStore = (MetadataContentStore) new InitialContext().lookup("java:global/databroker/metadata-store-1.0.0/MetadataContentFilesystemStore");
         }
         catch (Throwable throwable)
         {
