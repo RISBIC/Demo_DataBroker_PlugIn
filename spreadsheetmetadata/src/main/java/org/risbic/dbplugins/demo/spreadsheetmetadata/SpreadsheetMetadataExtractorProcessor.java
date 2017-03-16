@@ -122,7 +122,8 @@ public class SpreadsheetMetadataExtractorProcessor implements DataProcessor
             URI rdfURI = URI.create("http://rdf.arjuna.com/spreadsheet/" + _metadataId);
             XSSFSpreadsheetMetadataGenerator xssfSpeadsheetMetadataGenerator = new XSSFSpreadsheetMetadataGenerator();
             String rdf = xssfSpeadsheetMetadataGenerator.generateXSSFSpeadsheetMetadata(rdfURI, data);
-            _metadataContentStore.createOverwrite(_metadataId, rdf);
+            if (rdf != null)
+                _metadataContentStore.createOverwrite(_metadataId, rdf);
 
             _dataProvider.produce(data);
         }

@@ -11,14 +11,14 @@
 
     <groupId>org.risbic.dbplugins.demo</groupId>
     <artifactId>demo-plugin-parent</artifactId>
-    <version>1.0.0p2m1</version>
+    <version>1.0.0</version>
 
     <packaging>pom</packaging>
 
     <name>Demo DataBroker PlugIn Parent</name>
 
     <properties>
-        <version.org.risbic.dbplugins.demo>1.0.0p2m1</version.org.risbic.dbplugins.demo>
+        <version.org.risbic.dbplugins.demo>1.0.0</version.org.risbic.dbplugins.demo>
         <version.com.arjuna.databroker>1.0.0</version.com.arjuna.databroker>
         <version.com.arjuna.dbutils.metadata>1.0.0</version.com.arjuna.dbutils.metadata>
         <version.com.arjuna.dbutils.testsupport>1.0.0</version.com.arjuna.dbutils.testsupport>

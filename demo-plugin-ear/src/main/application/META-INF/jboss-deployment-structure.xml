@@ -7,14 +7,14 @@
 <jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.1">
     <ear-subdeployments-isolated>false</ear-subdeployments-isolated>
 
-    <sub-deployment name="demo-plugin-1.0.0p2m1.jar">
+    <sub-deployment name="demo-plugin-1.0.0.jar">
         <dependencies>
             <module name="deployment.databroker.ear.data-common.jar"/>
             <module name="deployment.databroker.ear.data-core-jee.jar"/>
         </dependencies>
     </sub-deployment>
 
-    <sub-deployment name="spreadsheet2jdbc-1.0.0p2m1.jar">
+    <sub-deployment name="spreadsheet2jdbc-1.0.0.jar">
         <dependencies>
             <!-- module name="org.postgresql" slot="main"/ -->
             <module name="org.postgresql.jdbc" slot="main"/>
@@ -23,7 +23,7 @@
         </dependencies>
     </sub-deployment>
 
-    <sub-deployment name="spreadsheetmetadata-1.0.0p2m1.jar">
+    <sub-deployment name="spreadsheetmetadata-1.0.0.jar">
         <dependencies>
             <module name="deployment.databroker.ear.data-common.jar"/>
             <module name="deployment.databroker.ear.data-common-jee.jar"/>
@@ -32,7 +32,7 @@
         </dependencies>
     </sub-deployment>
 
-    <sub-deployment name="jsonmetadata-1.0.0p2m1.jar">
+    <sub-deployment name="jsonmetadata-1.0.0.jar">
         <dependencies>
             <module name="deployment.databroker.ear.data-common.jar"/>
             <module name="deployment.databroker.ear.data-common-jee.jar"/>

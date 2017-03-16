@@ -136,7 +136,8 @@ public class ExtraJSONMetadataPreservingExtractorProcessor implements DataProces
                 URI rdfURI = URI.create("http://rdf.arjuna.com/json/" + _metadataId);
                 JSONArrayMetadataGenerator jsonArrayMetadataGenerator = new JSONArrayMetadataGenerator();
                 String rdf = jsonArrayMetadataGenerator.generateJSONArrayMetadata(rdfURI, (Map<String, Object>) data);
-                _metadataContentStore.createOverwrite(_metadataId, rdf);
+                if (rdf != null)
+                    _metadataContentStore.createOverwrite(_metadataId, rdf);
             }
 
             _dataProvider.produce(data);
